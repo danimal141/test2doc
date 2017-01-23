@@ -31,11 +31,11 @@ func (rw *ResponseWriter) Header() http.Header {
 }
 
 func (rw *ResponseWriter) Write(b []byte) (int, error) {
-	rw.setHandlerInfo()
 	return rw.W.Write(b)
 }
 
 func (rw *ResponseWriter) WriteHeader(c int) {
+	rw.setHandlerInfo()
 	rw.W.WriteHeader(c)
 }
 
