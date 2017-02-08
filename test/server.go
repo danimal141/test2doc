@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"sort"
 
 	"github.com/adams-sarah/test2doc/doc"
@@ -75,6 +76,13 @@ func handleAndRecord(handler http.Handler, outDoc *doc.Doc) http.HandlerFunc {
 		// setup resource
 		u := doc.NewURL(req)
 		path := u.ParameterizedPath
+
+		// even URLs that accept different query parameters are regarded as identical
+		reg := regexp.MustCompile(`\A((.+){(.+)})({\?(.+)})\z`)
+		matches := reg.FindStringSubmatch(path)
+		if len(matches) > 1 {
+			path = matches[1]
+		}
 
 		if resources[path] == nil {
 			resources[path] = doc.NewResource(u)
